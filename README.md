@@ -25,8 +25,18 @@ You must submit your work using [this form](https://forms.nhcarrigan.com/form/sd
 
 so the theme is "It Just Works",
 it would be better to create some simple games like **Manufactoria, ShapeZ and other games**
-that *themed in "Factory"* and *featured with "Automations"*.
+that _themed in "Factory"_ and _featured with "Automations"_.
 
 and based on the time limits, so its better to create a game that is easy to understand and play, with a simple interface and mechanicsthats means we must using lots of SVG/Emote to be the assets and use table for a grid layouts.
 
 sadly i cant use TS in this project because its a "Vanilla Javascript" challenge.
+
+---
+
+okay so i came up with some random idea:
+
+because this section is called _Echo Terminal_, so it would be nice if i just themed the interface with the Minecraft's Deep Dark color scheme.
+
+and the name contains terminals, so it can be interacted with the _actual terminals_.
+
+other ideas remains same.
