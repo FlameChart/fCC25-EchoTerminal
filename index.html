@@ -104,34 +104,52 @@
         <p>-- inspired by Manufactoria & ShapeZ</p>
         <div
             id="container"
-            style="display: flex; flex-direction: row; gap: 0.6rem"
+            style="
+                display: flex;
+                flex-direction: row;
+                gap: 0.6rem;
+                justify-content: space-between;
+                width: 60vw;
+            "
         >
-            <div id="levelContainer"></div>
+            <div
+                id="levelContainer"
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    width: 12rem;
+                    padding: 0.25rem;
+                    align-items: end;
+                    gap: 0.25rem;
+                "
+            ></div>
             <div
                 id="gameContainer"
-                style="display: flex; flex-direction: column"
+                style="
+                    display: flex;
+                    flex-direction: column;
+                    width: 100%;
+                    align-items: center;
+                "
             >
                 <div id="gameStage">
                     No level loaded, try to start a level on your left.
                 </div>
-                <div id="gameControl"></div>
-                <div id="gameLogs"></div>
             </div>
         </div>
 
         <!-- page manipulation goes here -->
         <script>
-            document.querySelector("#levelContainer").innerHTML = levels
-                .map(
-                    (level) => `
-            <div class="level">
-                <h3>${level.name}</h3>
-                <p>${level.description}</p>
-                <button class="play-button" onclick="startLevel('${level.id}')">Play</button>
-            </div>
-        `,
-                )
-                .join("");
+            document.querySelector("#levelContainer").innerHTML =
+                `<h3>Levels</h3>` +
+                levels
+                    .map(
+                        (level) =>
+                            `<div class="level">
+                            <button class="play-button" onclick="startLevel('${level.id}')">Load ${level.name}</button>
+                            </div>`,
+                    )
+                    .join("");
 
             document.querySelector("#gameStage");
         </script>
