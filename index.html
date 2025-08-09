@@ -6,16 +6,19 @@
     <title>EchoTerminal - Manufactoria</title>
 </head>
 <body>
+    <!-- Okay so for a better code organizing, I'd like to just put some const here. -->
     <script>
-    var clickCount = 0;
+        // don't mind this, i just wanna to testing some JS interactions :)
+        var clickCount = 0;
     </script>
     <h5>hello world</h5>
     <button id="clickButton">Click me!</button>
+    <!-- the actual logic goes here -->
     <script>
-      document.querySelector('#clickButton').addEventListener('click', function() {
-        clickCount++;
-        this.innerText = clickCount;
-      })
+        document.querySelector('#clickButton').addEventListener('click', function() {
+            clickCount++;
+            this.innerText = clickCount;
+        })
     </script>
 </body>
 </html>
