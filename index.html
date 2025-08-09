@@ -358,7 +358,10 @@
 
                 const baseCommand = input.split(" ")[0];
                 switch (baseCommand) {
-                    case "help":
+                  case "clear":
+                    textarea.value = "";
+                    break;
+                  case "help":
                         const helpAction = input.split(" ")[1];
                         switch (helpAction) {
                             case "level":
@@ -372,8 +375,9 @@
                                 break;
                             default:
                                 textarea.value += "Available commands:\n";
-                                textarea.value +=
-                                    "help - display this message\n";
+                                textarea.value += "clear - clear the terminal\n";
+                                textarea.value += "help - display this message\n";
+                                textarea.value += "level - switch and restart the level\n";
                         }
                         break;
                     case "level":
@@ -412,7 +416,7 @@
                         }
                     default:
                         textarea.value +=
-                            "Unknown command. Try to use 'help' to get the basic commands.\n";
+                            "Unknown command. Try to use 'help' to get the command list.\n";
                 }
 
                 textarea.scrollTop = textarea.scrollHeight;
