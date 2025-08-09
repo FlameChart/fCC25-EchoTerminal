@@ -374,11 +374,11 @@
                       startLevel(loadedLevel.id);
                       break;
                     default:
-                      textarea.value += 'Unknown level action. Try to use \'help <command>\' to get the usage.';
+                      textarea.value += 'Unknown level action. Try to use \'help <command>\' to get the usage.\n';
                   }
                   break;
                 default:
-                  textarea.value += 'Unknown command. Try to use \'help\' to get the basic commands.';
+                  textarea.value += 'Unknown command. Try to use \'help\' to get the basic commands.\n';
               }
 
               textarea.scrollTop = textarea.scrollHeight;
@@ -387,7 +387,7 @@
             // bind the "Submit" to the input
             let input = document.querySelector('#terminalInput');
                 input.addEventListener('keydown', (event) => {
-                    const key = event.key;
+                    let key = event.key;
                     if (key === "Enter") {
                         terminalEvent(input.value);
                         input.value = '';
