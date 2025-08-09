@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>EchoTerminal - Manufactoria</title>
+    <title>EchoTerminal - automation factory</title>
 
     <!-- some basic style -->
     <style>
@@ -60,13 +60,11 @@
 <body>
     <!-- Okay so for a better code organizing, I'd like to just put some const here. -->
     <script>
-        // don't mind this, i just wanna to testing some JS interactions :)
-        var clickCount = 0;
-
         // here is the define's
         // we need some "object" to contains "What is a level"
-        function level(name, description, height, width, objects) {
+        function level(name, id, description, height, width, objects) {
             this.name = name;
+            this.id = id;
             this.description = description;
             this.height = height;
             this.width = width;
@@ -85,42 +83,48 @@
 
         // and here is the level lists
         const levels = [
-          new level('Level 1', 'Learn the basics - Moving around', 5, 5, [
-            { type: 'block', x: 5, y: 5 }
-          ]),
-          new level('Level 2', 'Description for Level 2', 10, 10, [
-            { type: 'block', x: 5, y: 5 }
-          ]),
-          new level('Level 3', 'Description for Level 3', 10, 10, [
+          new level('Level 1', '1', 'Learn the basics - Moving around', 5, 5, [
             { type: 'block', x: 5, y: 5 }
           ])
         ]
 
         </script>
-    <h1>Manufactoria remake w/ vanilla JS</h1>
-    <button id="clickButton">Click me!</button>
-    <div id="container" style="display: flex; flex-direction: row;">
+    <h1>EchoTerminal - automation factory</h1>
+    <p>-- inspired by Manufactoria & ShapeZ</p>
+    <div id="container" style="display: flex; flex-direction: row; gap: 0.6rem;">
         <div id="levelContainer"></div>
         <div id="gameContainer" style="display: flex; flex-direction: column;">
-            <div id="gameStage"></div>
+            <div id="gameStage">No level loaded, try to start a level on your left.</div>
             <div id="gameControl"></div>
             <div id="gameLogs"></div>
         </div>
     </div>
     <!-- the actual logic goes here -->
     <script>
-        document.querySelector('#clickButton').addEventListener('click', function() {
-            clickCount++;
-            this.innerText = clickCount;
-        })
+        function startLevel(id){
+            for(let i = 0, i < levels.length, i++){
+            if(levels[i].id !== id) continue;
 
+            // generate the table for game field
+            // we need to generate the chess board for the actuall field
+            // and adding some extra border for a easier "failing" detection
+
+            }
+            document.querySelector('#gameStage').innerHTML = levels[0].description;
+        }
+    </script>
+
+    <!-- page manipulation goes here -->
+    <script>
         document.querySelector('#levelContainer').innerHTML = levels.map(level => `
             <div class="level">
                 <h3>${level.name}</h3>
                 <p>${level.description}</p>
-                <button class="play-button">Play</button>
+                <button class="play-button" onclick="startLevel(${level.id})">Play</button>
             </div>
         `).join('');
+
+        document.querySelector('#gameStage')
     </script>
 </body>
 </html>
