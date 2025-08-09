@@ -21,13 +21,13 @@
                 justify-content: center;
                 gap: 0.4rem;
 
-                font-family: 'IBM Plex Mono', monospace;
+                font-family: "IBM Plex Mono", monospace;
                 font-weight: normal;
                 font-style: normal;
             }
 
             .bitcount {
-                font-family: 'Bitcount Grid Single', sans-serif;
+                font-family: "Bitcount Grid Single", sans-serif;
                 font-weight: normal;
                 font-style: normal;
             }
@@ -89,23 +89,25 @@
             input:focus {
                 outline: none;
             }
-            </style>
+        </style>
 
         <!-- apply fonts -->
         <style>
-        @font-face {
-            font-family: 'IBM Plex Mono';
-            src: url('res/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
+            @font-face {
+                font-family: "IBM Plex Mono";
+                src: url("res/fonts/IBM_Plex_Mono/IBMPlexMono-Regular.ttf")
+                    format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
 
-        @font-face {
-            font-family: 'Bitcount Grid Single';
-            src: url('res/fonts/Bitcount_Grid_Single/static/BitcountGridSingle-Regular.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
+            @font-face {
+                font-family: "Bitcount Grid Single";
+                src: url("res/fonts/Bitcount_Grid_Single/static/BitcountGridSingle-Regular.ttf")
+                    format("truetype");
+                font-weight: normal;
+                font-style: normal;
+            }
         </style>
     </head>
     <body>
@@ -183,16 +185,32 @@
                     align-items: center;
                 "
             >
-                <div id="gameStage"
-                    style="display: flex; flex-direction: column; align-items: center;"
+                <div
+                    id="gameStage"
+                    style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                    "
                 >
                     No level loaded, try to start a level on your left.
                 </div>
                 <div id="gameEmulatedTerminal">
                     <!-- so here is the core / the only way to interact with the board -->
-                    <textarea id="terminalDisplay" rows="12" cols="80" readonly resize="none"></textarea>
-                    <br/>
-                    &gt; <input type="text" id="terminalInput" placeholder="Enter commands."/>
+                    <textarea
+                        id="terminalDisplay"
+                        rows="12"
+                        cols="80"
+                        readonly
+                        resize="none"
+                    ></textarea>
+                    <br />
+                    &gt;
+                    <input
+                        type="text"
+                        id="terminalInput"
+                        placeholder="Enter commands."
+                    />
                     <button id="terminalSubmit">Submit</button>
                 </div>
             </div>
