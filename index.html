@@ -99,20 +99,6 @@
             <div id="gameLogs"></div>
         </div>
     </div>
-    <!-- the actual logic goes here -->
-    <script>
-        function startLevel(id){
-            for(let i = 0, i < levels.length, i++){
-            if(levels[i].id !== id) continue;
-
-            // generate the table for game field
-            // we need to generate the chess board for the actuall field
-            // and adding some extra border for a easier "failing" detection
-
-            }
-            document.querySelector('#gameStage').innerHTML = levels[0].description;
-        }
-    </script>
 
     <!-- page manipulation goes here -->
     <script>
@@ -120,11 +106,51 @@
             <div class="level">
                 <h3>${level.name}</h3>
                 <p>${level.description}</p>
-                <button class="play-button" onclick="startLevel(${level.id})">Play</button>
+                <button class="play-button" onclick="startLevel('${level.id}')">Play</button>
             </div>
         `).join('');
 
         document.querySelector('#gameStage')
+    </script>
+
+    <!-- the actual logic goes here -->
+    <script>
+        function startLevel(id){
+          // first we need to have a way to recognize the level's size & basic info
+          for(let i = 0; i < levels.length; i++){
+            // skip the other levels
+            if(levels[i].id !== id) continue;
+            let level = levels[i];
+
+            // generate the table for game field
+            // we need to generate the chess board for the actuall field
+            // and adding some extra border for a easier "failing" detection
+            let table = document.createElement('table');
+            // table.style.border = '1px solid black';
+            table.style.borderCollapse = 'collapse';
+
+            for(let y = -1; y < levels[i].height + 1; y++){
+                let row = document.createElement('tr');
+                for(let x = -1; x < levels[i].width + 1; x++){
+                    let cell = document.createElement('td');
+
+                    cell.style.border = '1px solid black';
+                    cell.style.width = '2rem';
+                    cell.style.height = '2rem';
+
+                    // skip the failing cell
+                    if(x === -1 || y === -1 || x === level.width || y === level.height){
+                      cell.style.border = '0px';
+                    }
+                    row.appendChild(cell);
+                }
+                table.appendChild(row);
+            }
+
+            document.querySelector('#gameStage').innerHTML = level.description;
+            document.querySelector('#gameStage').appendChild(table);
+          }
+        }
     </script>
 </body>
 </html>
