@@ -202,7 +202,7 @@
             var loadedLevel = new level();
         </script>
         <h1 class="bitcount">EchoTerminal - automation factory</h1>
-        <p style="margin-bottom: 2rem;">-- inspired by Manufactoria & ShapeZ</p>
+        <p style="margin-bottom: 2rem">-- inspired by Manufactoria & ShapeZ</p>
         <div
             id="container"
             style="
@@ -327,7 +327,7 @@
                     // now we need to put the object into the table
                     for (let i = 0; i < level.objects.length; i++) {
                         let obj = level.objects[i];
-                        handleObjects(table, obj, "place");
+                        placeObjects(table, obj, "place");
                     }
 
                     document.querySelector("#gameStage").innerHTML =
@@ -338,16 +338,18 @@
             }
 
             // standalone place object function
-            function handleObjects(table, object, type = "place") {
+            function placeObjects(table, object, type = "place") {
+                // put the obj in table for display first
+                let cell = table.rows[object.y + 1].cells[object.x + 1];
+                cell.style.textAlign = "center";
+                cell.innerHTML = object.symbol;
 
-              let cell = table.rows[object.y + 1].cells[object.x + 1];
-              cell.style.textAlign = "center";
-              cell.innerHTML = object.symbol;
-
-              if(type !== "place"){
-                object.removable = true;
-                cell.style.backgroundColor = '#eeeeee';
-              }
+                // only contains two types of action
+                // place(pre-defined in levels) and add(placed by player)
+                if (type !== "place") {
+                    object.removable = true;
+                    cell.style.backgroundColor = "#043d4e";
+                }
             }
 
             function terminalEvent(input) {
@@ -358,10 +360,10 @@
 
                 const baseCommand = input.split(" ")[0];
                 switch (baseCommand) {
-                  case "clear":
-                    textarea.value = "";
-                    break;
-                  case "help":
+                    case "clear":
+                        textarea.value = "";
+                        break;
+                    case "help":
                         const helpAction = input.split(" ")[1];
                         switch (helpAction) {
                             case "level":
@@ -375,9 +377,12 @@
                                 break;
                             default:
                                 textarea.value += "Available commands:\n";
-                                textarea.value += "clear - clear the terminal\n";
-                                textarea.value += "help - display this message\n";
-                                textarea.value += "level - switch and restart the level\n";
+                                textarea.value +=
+                                    "clear - clear the terminal\n";
+                                textarea.value +=
+                                    "help - display this message\n";
+                                textarea.value +=
+                                    "level - switch and restart the level\n";
                         }
                         break;
                     case "level":
@@ -414,6 +419,7 @@
                         switch (placeAction) {
                             case "belt":
                         }
+                        break;
                     default:
                         textarea.value +=
                             "Unknown command. Try to use 'help' to get the command list.\n";
