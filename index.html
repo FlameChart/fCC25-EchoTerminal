@@ -184,6 +184,10 @@
                     ],
                 ),
             ];
+
+            // just a backup of currently loading levels, for showing level info
+            var loadedLevel = new level();
+
         </script>
         <h1 class="bitcount">EchoTerminal - automation factory</h1>
         <p>-- inspired by Manufactoria & ShapeZ</p>
@@ -269,11 +273,15 @@
         <!-- the actual logic goes here -->
         <script>
             function startLevel(id) {
-                // first we need to have a way to recognize the level's size & basic info
+              // flags about is the level loaded or nah
+              let flag = false;
+              // first we need to have a way to recognize the level's size & basic info
                 for (let i = 0; i < levels.length; i++) {
                     // skip the other levels
                     if (levels[i].id !== id) continue;
                     let level = levels[i];
+                    loadedLevel = level;
+                    flag = true;
 
                     // generate the table for game field
                     // we need to generate the chess board for the actuall field
@@ -317,19 +325,60 @@
                         level.description;
                     document.querySelector("#gameStage").appendChild(table);
                 }
+                return flag;
             }
 
             function terminalEvent(input) {
-              let textarea = document.querySelector('#terminalDisplay');
-              console.log(`User input: ${input}`);
+              // let terminal can be access
+              var textarea = document.querySelector('#terminalDisplay');
 
               textarea.value += '\n\n> ' + input + '\n';
 
-              if (input === "help") {
-                textarea.value += 'Available commands:\n';
-                textarea.value += 'help - display this message\n';
-              } else {
-                textarea.value += 'Unknown command. Try to use \'help\' to get the basic commands.';
+              const baseCommand = input.split(' ')[0];
+              switch(baseCommand) {
+                case "help":
+                const helpAction = input.split(' ')[1];
+                  switch(helpAction){
+                    case "level":
+                      textarea.value += `Available commands for ${helpAction}:\n`;
+                      textarea.value += 'info - display the current level info\n';
+                      textarea.value += 'load <ID> - load the specific level\n';
+                      textarea.value += 'restart - restart this level\n';
+                    break;
+                    default:
+                      textarea.value += 'Available commands:\n';
+                      textarea.value += 'help - display this message\n';
+
+                  }
+                  break;
+                case "level":
+                const levelAction = input.split(' ')[1];
+                  switch(levelAction) {
+                    case "info":
+                      if(loadedLevel.id === undefined){
+                        textarea.value += 'You are not in any levels.\n'
+                      } else {
+                        textarea.value += `You are in ${loadedLevel.name}(${loadedLevel.id}) now.\n`;
+                      }
+                      break;
+                    case "load":
+                      const levelID = input.split(' ')[2];
+                      if(startLevel(levelID)){
+                        textarea.value += 'Level loaded successfully!\n';
+                      } else {
+                        textarea.value += `Level ${levelID} is not loaded, is the ID correct?\n`
+                      }
+                      break;
+                    case "restart":
+                      textarea.value += `Restarting...\n`;
+                      startLevel(loadedLevel.id);
+                      break;
+                    default:
+                      textarea.value += 'Unknown level action. Try to use \'help <command>\' to get the usage.';
+                  }
+                  break;
+                default:
+                  textarea.value += 'Unknown command. Try to use \'help\' to get the basic commands.';
               }
 
               textarea.scrollTop = textarea.scrollHeight;
