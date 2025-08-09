@@ -1,4 +1,4 @@
-# fCC Gamejam 2025 August Projet - Echo Terminal
+# fCC Gamejam 2025 August Project - Echo Terminal
 
 ## Prompt
 
@@ -40,3 +40,11 @@ because this section is called _Echo Terminal_, so it would be nice if i just th
 and the name contains terminals, so it can be interacted with the _actual terminals_.
 
 other ideas remains same.
+
+---
+
+uhhhh, the **bonus point** in the gamejam is _to have some retro feels_, so it can be some "Visual enhancement" with some scan-lines.
+
+it wont be that hard and we can try to have some `<canvas>` to experimenting this.
+
+so lets put this thing to the _last_, we must focus on the actual gameplay and level design.
