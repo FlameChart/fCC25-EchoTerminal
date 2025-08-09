@@ -31,6 +31,12 @@
                 font-weight: normal;
                 font-style: normal;
             }
+
+            .mono {
+                font-family: "IBM Plex Mono", monospace;
+                font-weight: normal;
+                font-style: normal;
+            }
         </style>
 
         <!-- here is some typography style -->
@@ -82,7 +88,6 @@
                 border: 0;
                 font-size: 1rem;
                 padding: 0;
-                width: 80%;
                 background-color: transparent;
             }
 
@@ -226,6 +231,7 @@
                     <!-- so here is the core / the only way to interact with the board -->
                     <textarea
                         id="terminalDisplay"
+                        class="mono"
                         rows="12"
                         cols="80"
                         readonly
@@ -236,16 +242,18 @@
                     <input
                         type="text"
                         id="terminalInput"
+                        class="mono"
+                        style="width: 40rem;"
                         placeholder="Enter commands."
                     />
-                    <button id="terminalSubmit">Submit</button>
                 </div>
             </div>
         </div>
 
         <!-- page manipulation goes here -->
         <script>
-            document.querySelector("#levelContainer").innerHTML =
+        // init and display the levels
+        document.querySelector("#levelContainer").innerHTML =
                 `<h2 class="bitcount">Levels</h2>` +
                 levels
                     .map(
@@ -255,6 +263,7 @@
                             </div>`,
                     )
                     .join("");
+
         </script>
 
         <!-- the actual logic goes here -->
@@ -309,6 +318,32 @@
                     document.querySelector("#gameStage").appendChild(table);
                 }
             }
+
+            function terminalEvent(input) {
+              let textarea = document.querySelector('#terminalDisplay');
+              console.log(`User input: ${input}`);
+
+              textarea.value += '\n\n> ' + input + '\n';
+
+              if (input === "help") {
+                textarea.value += 'Available commands:\n';
+                textarea.value += 'help - display this message\n';
+              } else {
+                textarea.value += 'Unknown command. Try to use \'help\' to get the basic commands.';
+              }
+
+              textarea.scrollTop = textarea.scrollHeight;
+            }
+
+            // bind the "Submit" to the input
+            let input = document.querySelector('#terminalInput');
+                input.addEventListener('keydown', (event) => {
+                    const key = event.key;
+                    if (key === "Enter") {
+                        terminalEvent(input.value);
+                        input.value = '';
+                    }
+                });
         </script>
     </body>
 </html>
