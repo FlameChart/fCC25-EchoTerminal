@@ -48,3 +48,21 @@ uhhhh, the **bonus point** in the gamejam is _to have some retro feels_, so it c
 it wont be that hard and we can try to have some `<canvas>` to experimenting this.
 
 so lets put this thing to the _last_, we must focus on the actual gameplay and level design.
+
+---
+
+the folowing todo:
+
+> updated on the Day 2/3
+
+- [x] impl the load levels
+- [x] impl the terminal with basic functionality
+- [x] impl the belt (to move the bot)
+- [ ] impl the delete function (to remove obj u placed)
+- [ ] impl the run command
+- [ ] impl the game finish (to show that u success/fail)
+- [ ] impl the colorizer
+- [ ] impl the one way color wall
+- [ ] put the following on the lvl2 fot tutorial
+- [ ] make a level 3 containing all the things
+- [ ] make the game looks better with canvas
