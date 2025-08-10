@@ -377,6 +377,18 @@
 
             // standalone place object function
             function placeObjects(table, object, type = "place") {
+                let isSuccess = false;
+                // okay we should check the pos is empty or nah
+                for (let i = 0; i < loadedLevel.objects.length; i++) {
+                    if (
+                        loadedLevel.objects[i].x === object.x &&
+                        loadedLevel.objects[i].y === object.y &&
+                        type !== "place"
+                    ) {
+                        return;
+                    }
+                }
+
                 // put the obj in table for display first
                 let cell =
                     table.rows[Number(object.y) + 1].cells[
@@ -397,7 +409,9 @@
                     // and is not edit the original levels
                     // (okay u can just reset by refresh the page so idk if this is necessary...)
                     loadedLevel.objects.push(object);
+                    isSuccess = true;
                 }
+                return isSuccess;
             }
 
             // bind the "Submit" to the input
@@ -501,37 +515,42 @@
 
                                 // check if the length is outbound or not
                                 if (
-                                    x <= 0 ||
-                                    x > Number(loadedLevel.x) ||
-                                    y <= 0 ||
-                                    y > Number(loadedLevel.y)
+                                    x < 0 ||
+                                    x >= Number(loadedLevel.x) ||
+                                    y < 0 ||
+                                    y >= Number(loadedLevel.y)
                                 ) {
                                     textarea.value += `Coordinates must be inside the level. Usage: place belt x y [facing]\n`;
                                     break;
                                 }
 
-                                // add some expection to deal with
-                                if (beltInfo.split(" ").length < 3) {
+                                // ensure the direction exist
+                                if (
+                                    ["up", "down", "left", "right"].includes(
+                                        facing,
+                                    )
+                                ) {
+                                    var beltObj = new objBelt(x, y, facing);
+                                } else if (facing.length === 0) {
                                     var beltObj = new objBelt(x, y, "down");
                                 } else {
-                                    // ensure the direction exist
-                                    if (
-                                        [
-                                            "up",
-                                            "down",
-                                            "left",
-                                            "right",
-                                        ].includes(facing)
-                                    ) {
-                                        var beltObj = new objBelt(x, y, facing);
-                                    }
+                                    textarea.value += `Failed to place Belt: Invalid direction.`;
+                                    break;
+                                }
+
+                                // put the obj into game
+                                if (
                                     placeObjects(
                                         document.querySelector("#gameTable"),
                                         beltObj,
                                         "add",
-                                    );
+                                    )
+                                ) {
                                     textarea.value += `Belt(${beltObj.direction}) placed at (${x}, ${y})\n`;
+                                } else {
+                                    textarea.value += `Failed to place Belt(${beltObj.direction}) at (${x}, ${y})\n`;
                                 }
+
                                 break;
                         }
                         break;
