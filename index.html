@@ -183,6 +183,43 @@
                 this.removable = removable;
             }
 
+            function objBelt(x, y, direction) {
+                switch (direction) {
+                    case "up":
+                        return new gameObjects(
+                            "belt",
+                            lucide("chevrons-up"),
+                            x,
+                            y,
+                            direction,
+                        );
+                    case "down":
+                        return new gameObjects(
+                            "belt",
+                            lucide("chevrons-down"),
+                            x,
+                            y,
+                            direction,
+                        );
+                    case "left":
+                        return new gameObjects(
+                            "belt",
+                            lucide("chevrons-left"),
+                            x,
+                            y,
+                            direction,
+                        );
+                    case "right":
+                        return new gameObjects(
+                            "belt",
+                            lucide("chevrons-right"),
+                            x,
+                            y,
+                            direction,
+                        );
+                }
+            }
+
             // and here is the level lists
             const levels = [
                 new level(
@@ -299,6 +336,7 @@
                     // we need to generate the chess board for the actuall field
                     // and adding some extra border for a easier "failing" detection
                     let table = document.createElement("table");
+                    table.id = "gameTable";
                     // table.style.border = '1px solid black';
                     table.style.borderCollapse = "collapse";
 
@@ -340,7 +378,10 @@
             // standalone place object function
             function placeObjects(table, object, type = "place") {
                 // put the obj in table for display first
-                let cell = table.rows[object.y + 1].cells[object.x + 1];
+                let cell =
+                    table.rows[Number(object.y) + 1].cells[
+                        Number(object.x) + 1
+                    ];
                 cell.style.textAlign = "center";
                 cell.innerHTML = object.symbol;
 
@@ -349,8 +390,25 @@
                 if (type !== "place") {
                     object.removable = true;
                     cell.style.backgroundColor = "#043d4e";
+
+                    // okay so we need to put the obj into a list for the actually exectuion section
+                    // uhh so we need to put the obj into the `loadedLevel.objects`
+                    // because that is being set when a level is loaded
+                    // and is not edit the original levels
+                    // (okay u can just reset by refresh the page so idk if this is necessary...)
+                    loadedLevel.objects.push(object);
                 }
             }
+
+            // bind the "Submit" to the input
+            let terminalInput = document.querySelector("#terminalInput");
+            terminalInput.addEventListener("keydown", (event) => {
+                let key = event.key;
+                if (key === "Enter") {
+                    terminalEvent(terminalInput.value);
+                    terminalInput.value = "";
+                }
+            });
 
             function terminalEvent(input) {
                 // let terminal can be access
@@ -418,6 +476,63 @@
                         const placeAction = input.split(" ")[1];
                         switch (placeAction) {
                             case "belt":
+                                // looks bad but understandable and can seperates the actually working part
+                                const beltInfo = input.split(" belt ")[1];
+
+                                // so the command is like
+                                // `place belt (corrds) (facing)`
+                                // so to be place in (2,3) and facing down
+                                // its be like `place belt 2 3 [facing is down by default]
+                                if (
+                                    beltInfo.split(" ").length < 2 ||
+                                    beltInfo.split(" ").length > 4
+                                ) {
+                                    textarea.value += `Argument is invalid. Usage: place belt x y [facing]\n`;
+                                    break;
+                                }
+
+                                let [x, y, facing] = beltInfo.split(" ");
+
+                                // gaves feedback when the input's format is correct but not valid
+                                if (!/^\d+$/g.test(x) || !/^\d+$/g.test(y)) {
+                                    textarea.value += `Coordinates must be numbers. Usage: place belt x y [facing]\n`;
+                                    break;
+                                }
+
+                                // check if the length is outbound or not
+                                if (
+                                    x <= 0 ||
+                                    x > Number(loadedLevel.x) ||
+                                    y <= 0 ||
+                                    y > Number(loadedLevel.y)
+                                ) {
+                                    textarea.value += `Coordinates must be inside the level. Usage: place belt x y [facing]\n`;
+                                    break;
+                                }
+
+                                // add some expection to deal with
+                                if (beltInfo.split(" ").length < 3) {
+                                    var beltObj = new objBelt(x, y, "down");
+                                } else {
+                                    // ensure the direction exist
+                                    if (
+                                        [
+                                            "up",
+                                            "down",
+                                            "left",
+                                            "right",
+                                        ].includes(facing)
+                                    ) {
+                                        var beltObj = new objBelt(x, y, facing);
+                                    }
+                                    placeObjects(
+                                        document.querySelector("#gameTable"),
+                                        beltObj,
+                                        "add",
+                                    );
+                                    textarea.value += `Belt(${beltObj.direction}) placed at (${x}, ${y})\n`;
+                                }
+                                break;
                         }
                         break;
                     default:
@@ -427,16 +542,6 @@
 
                 textarea.scrollTop = textarea.scrollHeight;
             }
-
-            // bind the "Submit" to the input
-            let input = document.querySelector("#terminalInput");
-            input.addEventListener("keydown", (event) => {
-                let key = event.key;
-                if (key === "Enter") {
-                    terminalEvent(input.value);
-                    input.value = "";
-                }
-            });
         </script>
     </body>
 </html>
