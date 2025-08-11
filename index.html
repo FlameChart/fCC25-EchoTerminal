@@ -485,7 +485,7 @@
             function terminalDisplay(text) {
                 let terminalText = document.querySelector("#terminalDisplay");
                 terminalText.value += text + "\n";
-                terminalText.scrollTop = textarea.scrollHeight;
+                terminalText.scrollTop = terminalText.scrollHeight;
             }
 
             function runRobot() {
