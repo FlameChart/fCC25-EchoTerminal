@@ -152,7 +152,7 @@
                     case "iteration-cw":
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-cw-icon lucide-iteration-cw"><path d="M4 10a8 8 0 1 1 8 8H4"/><path d="m8 22-4-4 4-4"/></svg>';
                     case "trash":
-                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x-icon lucide-octagon-x"><path d="m15 9-6 6"/><path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z"/><path d="m9 9 6 6"/></svg>'
+                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-octagon-x-icon lucide-octagon-x"><path d="m15 9-6 6"/><path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z"/><path d="m9 9 6 6"/></svg>';
                     default:
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 20l-7-7h14l-7 7z"/></svg>';
                 }
@@ -272,62 +272,64 @@
                     2,
                 ),
                 new level(
-                  "Level 3",
-                  "3",
-                  "Don't put bots into trashcan!",
-                  "You know what's the purpose of a trashcan exist, don't put our cute robot into there, otherwise the Boss will facing a loss.",
-                  5, 9,
-                  [
-                    new gameObjects("spawn", lucide("circle-play"), 2, 0),
-                    new gameObjects(
-                        "spin",
-                        lucide("iteration-ccw"),
-                        2,
-                        2,
-                        "right",
-                    ),
-                    new gameObjects("trashcan", lucide("trash"), 2, 3),
-                    new gameObjects("trashcan", lucide("trash"), 3, 1),
-                    new gameObjects("trashcan", lucide("trash"), 6, 1),
-                    new gameObjects("trashcan", lucide("trash"), 6, 2),
-                    new gameObjects("trashcan", lucide("trash"), 6, 3),
-                    new gameObjects("flag", lucide("goal"), 7, 2),
-                  ],
-                  2
+                    "Level 3",
+                    "3",
+                    "Don't put bots into trashcan!",
+                    "You know what's the purpose of a trashcan exist, don't put our cute robot into there, otherwise the Boss will facing a loss.",
+                    5,
+                    9,
+                    [
+                        new gameObjects("spawn", lucide("circle-play"), 2, 0),
+                        new gameObjects(
+                            "spin",
+                            lucide("iteration-ccw"),
+                            2,
+                            2,
+                            "right",
+                        ),
+                        new gameObjects("trashcan", lucide("trash"), 2, 3),
+                        new gameObjects("trashcan", lucide("trash"), 3, 1),
+                        new gameObjects("trashcan", lucide("trash"), 6, 1),
+                        new gameObjects("trashcan", lucide("trash"), 6, 2),
+                        new gameObjects("trashcan", lucide("trash"), 6, 3),
+                        new gameObjects("flag", lucide("goal"), 7, 2),
+                    ],
+                    2,
                 ),
                 new level(
-                  "Level 4",
-                  "4",
-                  "Final Exam!",
-                  "It's a good day outside...",
-                  5, 9,
-                  [
-                    new gameObjects("spawn", lucide("circle-play"), 2, 0),
-                    new gameObjects(
-                        "spin",
-                        lucide("iteration-ccw"),
-                        2,
-                        2,
-                        "down",
-                    ),
-                    new gameObjects(
-                        "spin",
-                        lucide("iteration-ccw"),
-                        2,
-                        3,
-                        "right",
-                    ),
-                    new gameObjects("trashcan", lucide("trash"), 3, 4),
-                    new gameObjects("trashcan", lucide("trash"), 4, 0),
-                    new gameObjects("trashcan", lucide("trash"), 4, 1),
-                    new gameObjects("trashcan", lucide("trash"), 4, 3),
-                    new gameObjects("trashcan", lucide("trash"), 6, 1),
-                    new gameObjects("trashcan", lucide("trash"), 6, 2),
-                    new gameObjects("trashcan", lucide("trash"), 6, 3),
-                    new gameObjects("flag", lucide("goal"), 7, 2),
-                  ],
-                  3
-                )
+                    "Level 4",
+                    "4",
+                    "Final Exam!",
+                    "It's a good day outside...",
+                    5,
+                    9,
+                    [
+                        new gameObjects("spawn", lucide("circle-play"), 2, 0),
+                        new gameObjects(
+                            "spin",
+                            lucide("iteration-ccw"),
+                            2,
+                            2,
+                            "down",
+                        ),
+                        new gameObjects(
+                            "spin",
+                            lucide("iteration-ccw"),
+                            2,
+                            3,
+                            "right",
+                        ),
+                        new gameObjects("trashcan", lucide("trash"), 3, 4),
+                        new gameObjects("trashcan", lucide("trash"), 4, 0),
+                        new gameObjects("trashcan", lucide("trash"), 4, 1),
+                        new gameObjects("trashcan", lucide("trash"), 4, 3),
+                        new gameObjects("trashcan", lucide("trash"), 6, 1),
+                        new gameObjects("trashcan", lucide("trash"), 6, 2),
+                        new gameObjects("trashcan", lucide("trash"), 6, 3),
+                        new gameObjects("flag", lucide("goal"), 7, 2),
+                    ],
+                    3,
+                ),
             ];
 
             // just a backup of currently loading levels, for showing level info
@@ -419,7 +421,8 @@
             function startLevel(id) {
                 loadedLevel = null;
                 //before we load the level, lets destory the table if the table exist
-                if(document.querySelector('table#gameTable')) document.querySelector('table#gameTable').remove()
+                if (document.querySelector("table#gameTable"))
+                    document.querySelector("table#gameTable").remove();
 
                 // flags about is the level loaded or nah
                 let flag = false;
@@ -428,8 +431,7 @@
                     // skip the other levels
                     if (levels[i].id !== id) continue;
                     let level = levels[i];
-                    loadedLevel =
-                      JSON.parse(JSON.stringify(level));
+                    loadedLevel = JSON.parse(JSON.stringify(level));
                     terminalDisplay(level.intro);
                     flag = true;
 
@@ -735,7 +737,7 @@
                                     break;
                                 case "trashcan":
                                     // trashcan will trash your bot immediately
-                                    break
+                                    break;
                                 case "flag":
                                     // the wining condition is to make the bot touch the flag.
                                     runningFlag = true;
@@ -864,8 +866,8 @@
                     case "place":
                         const placeAction = input.split(" ")[1];
                         switch (placeAction) {
-                          // okay im just tired and want to simplified the process
-                          default:
+                            // okay im just tired and want to simplified the process
+                            default:
                                 // looks bad but understandable and can seperates the actually working part
                                 const beltInfo = input.split("ace ")[1];
 
