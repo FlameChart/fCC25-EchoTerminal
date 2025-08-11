@@ -148,9 +148,9 @@
                     case "circle-play":
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-play-icon lucide-circle-play"><path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"/><circle cx="12" cy="12" r="10"/></svg>';
                     case "iteration-ccw":
-                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-ccw-icon lucide-iteration-ccw"><path d="m16 14 4 4-4 4"/><path d="M20 10a8 8 0 1 0-8 8h8"/></svg>'
+                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-ccw-icon lucide-iteration-ccw"><path d="m16 14 4 4-4 4"/><path d="M20 10a8 8 0 1 0-8 8h8"/></svg>';
                     case "iteration-cw":
-                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-cw-icon lucide-iteration-cw"><path d="M4 10a8 8 0 1 1 8 8H4"/><path d="m8 22-4-4 4-4"/></svg>'
+                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-cw-icon lucide-iteration-cw"><path d="M4 10a8 8 0 1 1 8 8H4"/><path d="m8 22-4-4 4-4"/></svg>';
                     default:
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 20l-7-7h14l-7 7z"/></svg>';
                 }
@@ -244,7 +244,7 @@
                     5, 7,
                     [
                       new gameObjects("spawn", lucide("circle-play"), 2, 0),
-                      new gameObjects("spin", lucide("iteration-ccw"), 2, 3, "down")
+                      new gameObjects("spin", lucide("iteration-ccw"), 2, 3, "left"),
                       new gameObjects("flag", lucide("goal"), 4, 4),
                     ]
                 )
@@ -409,8 +409,37 @@
                     table.rows[Number(object.y) + 1].cells[
                         Number(object.x) + 1
                     ];
-                cell.style.textAlign = "center";
-                cell.innerHTML = object.symbol;
+                let cellContent = document.createElement("div");
+                cellContent.style.display = "flex";
+                cellContent.style.justifyContent = "center";
+                cellContent.style.alignItems = "center";
+                cellContent.style.width = "100%";
+                cellContent.style.height = "100%";
+                cellContent.innerHTML = object.symbol;
+
+                // if its the spin obj then just make the SVG spins into the directions
+                switch (object.type ){
+                  case "spin":
+                switch (object.direction) {
+                        case "top":
+                            cellContent.style.transform = "rotate(270deg)";
+                            break;
+                        case "left":
+                            cellContent.style.transform = "rotate(180deg)";
+                            break;
+                        case "bottom":
+                            //top, bottom, left spins 90deg
+                            cellContent.style.transform = "rotate(90deg)";
+                        case "right":
+                            //right is the normal state
+                            // so it spins nothing
+                        default:
+                            break;
+                    }
+                    break;
+                }
+
+                cell.appendChild(cellContent);
 
                 // only contains two types of action
                 // place(pre-defined in levels) and add(placed by player)
@@ -432,7 +461,7 @@
             }
 
             function terminalDisplay(text) {
-                let terminalText = document.querySelector('#terminalDisplay');
+                let terminalText = document.querySelector("#terminalDisplay");
                 terminalText.value += text + "\n";
                 terminalText.scrollTop = textarea.scrollHeight;
             }
@@ -507,26 +536,28 @@
                         switch (standingObject.type) {
                             case "spawn":
                                 // we will moving down by default
-                                terminalDisplay(`Spawn robot in (${player.x}, ${player.y})`)
+                                terminalDisplay(
+                                    `Spawn robot in (${player.x}, ${player.y})`,
+                                );
                                 player.y += 1;
                                 break;
                             case "belt":
                                 // the moving is depending on the belt's directions
                                 switch (standingObject.direction) {
                                     case "left":
-                                        terminalDisplay(`Moving left`)
+                                        terminalDisplay(`Moving left`);
                                         player.x -= 1;
                                         break;
                                     case "right":
-                                        terminalDisplay(`Moving right`)
+                                        terminalDisplay(`Moving right`);
                                         player.x += 1;
                                         break;
                                     case "up":
-                                        terminalDisplay(`Moving up`)
+                                        terminalDisplay(`Moving up`);
                                         player.y -= 1;
                                         break;
                                     case "down":
-                                        terminalDisplay(`Moving down`)
+                                        terminalDisplay(`Moving down`);
                                         player.y += 1;
                                         break;
                                     default:
@@ -546,14 +577,18 @@
                         playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
 
                         // verify if player is dead or win
-                        if(standingObject.type === "flag"){
-                          // triggers the wining and stop the loop
-                          terminalDisplay(`Congratulations, your robot is successfully reached the flag.`)
-                          clearInterval(mainLoop);
+                        if (standingObject.type === "flag") {
+                            // triggers the wining and stop the loop
+                            terminalDisplay(
+                                `Congratulations, your robot is successfully reached the flag.`,
+                            );
+                            clearInterval(mainLoop);
                         }
                     } else {
                         // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
-                        terminalDisplay(`Oops, your robot just fell down. Wanna try it again?`)
+                        terminalDisplay(
+                            `Oops, your robot just fell down. Wanna try it again?`,
+                        );
                         clearInterval(mainLoop);
                     }
                 }, 1000);
@@ -573,7 +608,7 @@
                 // let terminal can be access
                 var textarea = document.querySelector("#terminalDisplay");
 
-                terminalDisplay(`\n\n> ${input}`)
+                terminalDisplay(`\n\n> ${input}`);
 
                 const baseCommand = input.split(" ")[0];
                 switch (baseCommand) {
@@ -591,8 +626,12 @@
                                     "load <ID> - load the specific level\n";
                                 textarea.value +=
                                     "restart - restart this level\n";
-                                    terminalDisplay(`clear - clear the terminal screen`)
-                                    terminalDisplay(`run - spawn the bot to test if your factory is working`)
+                                terminalDisplay(
+                                    `clear - clear the terminal screen`,
+                                );
+                                terminalDisplay(
+                                    `run - spawn the bot to test if your factory is working`,
+                                );
                                 break;
                             default:
                                 textarea.value += "Available commands:\n";
@@ -648,7 +687,9 @@
                                     beltInfo.split(" ").length < 2 ||
                                     beltInfo.split(" ").length > 4
                                 ) {
-                                    terminalDisplay( `Argument is invalid. Usage: place belt x y [facing]\n`)
+                                    terminalDisplay(
+                                        `Argument is invalid. Usage: place belt x y [facing]\n`,
+                                    );
                                     break;
                                 }
 
@@ -656,7 +697,9 @@
 
                                 // gaves feedback when the input's format is correct but not valid
                                 if (!/^\d+$/g.test(x) || !/^\d+$/g.test(y)) {
-                                    terminalDisplay( `Coordinates must be numbers. Usage: place belt x y [facing]\n`)
+                                    terminalDisplay(
+                                        `Coordinates must be numbers. Usage: place belt x y [facing]\n`,
+                                    );
                                     break;
                                 }
 
@@ -689,7 +732,9 @@
                                         "down",
                                     );
                                 } else {
-                                    terminalDisplay( `Failed to place Belt: Invalid direction.`)
+                                    terminalDisplay(
+                                        `Failed to place Belt: Invalid direction.`,
+                                    );
                                     break;
                                 }
 
