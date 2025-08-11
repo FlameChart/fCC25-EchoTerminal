@@ -244,7 +244,7 @@
                     5, 7,
                     [
                       new gameObjects("spawn", lucide("circle-play"), 2, 0),
-                      new gameObjects("spin", lucide("iteration-ccw"), 2, 3, "left"),
+                      new gameObjects("spin", lucide("iteration-ccw"), 2, 3, "down"),
                       new gameObjects("flag", lucide("goal"), 4, 4),
                     ]
                 )
@@ -427,7 +427,7 @@
                         case "left":
                             cellContent.style.transform = "rotate(180deg)";
                             break;
-                        case "bottom":
+                        case "down":
                             //top, bottom, left spins 90deg
                             cellContent.style.transform = "rotate(90deg)";
                         case "right":
@@ -563,6 +563,78 @@
                                     default:
                                         break;
                                 }
+                                break;
+                            case "spin":
+                                // okay so we need to move the player into the right direction, and then spin the tile's directions
+
+                                // starting with the normal moving
+                                switch (standingObject.direction) {
+                                    case "left":
+                                        terminalDisplay(`Moving left`);
+                                        player.x -= 1;
+                                        break;
+                                    case "right":
+                                        terminalDisplay(`Moving right`);
+                                        player.x += 1;
+                                        break;
+                                    case "up":
+                                        terminalDisplay(`Moving up`);
+                                        player.y -= 1;
+                                        break;
+                                    case "down":
+                                        terminalDisplay(`Moving down`);
+                                        player.y += 1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                // then spin the tile
+                                terminalDisplay("After moving on, the tile spins.")
+                                switch (standingObject.direction) {
+                                    case "left":
+                                        player.x -= 1;
+                                        standingObject.direction = "down"
+                                        break;
+                                    case "right":
+                                        standingObject.direction = "up"
+                                        break;
+                                    case "up":
+                                        player.y -= 1;
+                                        standingObject.direction = "left"
+                                        break;
+                                    case "down":
+                                        player.y += 1;
+                                        standingObject.direction = "right"
+                                        break;
+                                    default:
+                                        break;
+                                }
+
+                                // then updates the table showing up the newest directions
+                                // look for the cell in the corresponding place and clear the cell
+                                let spiningCell = document
+                                    .querySelector("#gameTable")
+                                    .querySelector(
+                                        `tr:nth-child(${standingObject.y + 2}) td:nth-child(${standingObject.x + 2})`,
+                                    ).querySelector("div");
+                                // and just directly updates
+                                switch (object.direction) {
+                                        case "top":
+                                            spiningCell.style.transform = "rotate(270deg)";
+                                            break;
+                                        case "left":
+                                            spiningCell.style.transform = "rotate(180deg)";
+                                            break;
+                                        case "down":
+                                            //top, bottom, left spins 90deg
+                                            spiningCell.style.transform = "rotate(90deg)";
+                                        case "right":
+                                            //right is the normal state but here we need set to 0deg
+                                            spiningCell.style.transform = "rotate(0deg)";
+                                        default:
+                                            break;
+                                    }
                                 break;
                             case "flag":
                                 // the wining condition is to make the bot touch the flag.
