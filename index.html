@@ -346,7 +346,7 @@
                             let cell = document.createElement("td");
 
                             cell.style.border = "1px solid #044771";
-                            cell.style.width = "32px"
+                            cell.style.width = "32px";
                             cell.style.height = "32px";
 
                             if (
@@ -431,11 +431,14 @@
                 let player = {
                     color: "FFFFFF",
                     x: -1,
-                    y: -1
-                }
+                    y: -1,
+                };
 
                 // init the player by read the spawn obj and move the player onnit
-                const spawnpoint = loadedLevel.objects.find(obj => {return obj.type === "spawn"})
+                const objectLists = loadedLevel.objects;
+                const spawnpoint = objectLists.find((obj) => {
+                    return obj.type === "spawn";
+                });
                 player.x = spawnpoint.x;
                 player.y = spawnpoint.y;
 
@@ -446,33 +449,72 @@
                 panel.style.width = `${(loadedLevel.width + 2) * 2 * 16}px`;
                 panel.style.height = "0px";
                 panel.style.backgroundColor = "red";
-                document.querySelector('#gameStage').appendChild(panel);
+                document.querySelector("#gameStage").appendChild(panel);
 
                 // and draw the robot onnit
                 let playerIcon = document.createElement("div");
                 playerIcon.style.position = "relative";
-                playerIcon.style.display = "flex"
+                playerIcon.style.display = "flex";
                 playerIcon.style.alignItems = "center";
                 playerIcon.style.justifyContent = "center";
                 playerIcon.innerHTML = lucide("bot");
-                playerIcon.style.backgroundColor = `#${player.color}77`
+                playerIcon.style.backgroundColor = `#${player.color}77`;
                 playerIcon.style.width = "32px";
                 playerIcon.style.height = "32px";
-                playerIcon.style.left = `${((player.x + 1) * 2 * 16)}px`;
-                playerIcon.style.top = `${((player.y - loadedLevel.height - 1.15) * 2 * 16)}px`;
+                playerIcon.style.left = `${(player.x + 1) * 2 * 16}px`;
+                playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16}px`;
                 panel.appendChild(playerIcon);
 
                 // so here we have the robot display, now is the main loop
                 let mainLoop = setInterval(() => {
-                    // update the player position
-                    player.x += Math.random() > 0.5 ? 1 : -1;
-                    player.y += Math.random() > 0.5 ? 1 : -1;
+                    // randomly update the player position
+                    // player.x += Math.random() > 0.5 ? 1 : -1;
+                    // player.y += Math.random() > 0.5 ? 1 : -1;
 
-                    // update the player icon position
-                    playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
-                    playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
+                    // so first we need to know which tile im standing on
+                    var standingObject = objectLists.find((obj) => {
+                        return obj.x === player.x && obj.y === player.y;
+                    });
+                    if (standingObject) {
+                        // there has the object underneath the bot
+                        // so lets moving / happening something
+                        switch (standingObject.type) {
+                            case "spawn":
+                                // we will moving down by default
+                                player.y += 1;
+                                break;
+                            case "belt":
+                                // the moving is depending on the belt's directions
+                                switch (standingObject.direction) {
+                                    case "left":
+                                        player.x -= 1;
+                                        break;
+                                    case "right":
+                                        player.x += 1;
+                                        break;
+                                    case "up":
+                                        player.y -= 1;
+                                        break;
+                                    case "down":
+                                        player.y += 1;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case "flag":
+                                // the wining condition is to make the bot touch the flag.
+                                break;
+                            default:
+                                break;
+                        }
+                        // update the player icon position
+                        playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
+                        playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
+                    } else {
+                        // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
+                    }
                 }, 1000);
-
             }
 
             // bind the "Submit" to the input
