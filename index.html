@@ -426,6 +426,43 @@
                 // if there has flag then game / level is passed
                 // if there has the colorizer then colored the robot and put it towards
                 // if there has a one way color wall we can just pass
+
+                // defines whats a player
+                let player = {
+                    color: "FFFFFF",
+                    x: -1,
+                    y: -1
+                }
+
+                // init the player by read the spawn obj and move the player onnit
+                const spawnpoint = loadedLevel.objects.find(obj => {return obj.type === "spawn"})
+                player.x = spawnpoint.x;
+                player.y = spawnpoint.y;
+
+                // create the panel with relative pos on the table
+                let panel = document.createElement("div");
+                panel.id = "playerPanelPosition";
+                panel.style.position = "relative";
+                panel.style.width = `${(loadedLevel.width + 2) * 2}rem`;
+                panel.style.height = "0px";
+                panel.style.backgroundColor = "red";
+                document.querySelector('#gameStage').appendChild(panel);
+
+                // and draw the robot onnit
+                let playerIcon = document.createElement("div");
+                playerIcon.style.position = "relative";
+                playerIcon.style.display = "flex"
+                playerIcon.style.alignItems = "center";
+                playerIcon.style.justifyContent = "center";
+                playerIcon.innerHTML = lucide("bot");
+                playerIcon.style.backgroundColor = `#${player.color}77`
+                playerIcon.style.width = "2rem";
+                playerIcon.style.height = "2rem";
+                playerIcon.style.left = `${(player.x + 1) * 2}rem`;
+                playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2}rem`;
+                panel.appendChild(playerIcon);
+
+                // so here we have the robot display, now is the main loop
             }
 
             // bind the "Submit" to the input
@@ -609,7 +646,6 @@
                                     1,
                                 );
                                 // look for the cell in the corresponding place and clear the cell
-                                debugger;
                                 let cell = document
                                     .querySelector("#gameTable")
                                     .querySelector(
