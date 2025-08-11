@@ -161,13 +161,24 @@
         <script>
             // here is the define's
             // we need some "object" to contains "What is a level"
-            function level(name, id, description, height, width, objects) {
+            function level(
+                name,
+                id,
+                description,
+                intro,
+                height,
+                width,
+                objects,
+                bots = 1,
+            ) {
                 this.name = name;
                 this.id = id;
                 this.description = description;
+                this.intro = intro;
                 this.height = height;
                 this.width = width;
                 this.objects = objects;
+                this.pendingBots = bots;
             }
 
             // and here is the "blueprint" of all the game objects
@@ -230,6 +241,7 @@
                     "Level 1",
                     "1",
                     "Learn the basics - Moving around",
+                    "Welcome, so here is the simplest tutorial: use `place belt ...` to place your belt and use `run` command to test your factory. Good Luck.",
                     5,
                     5,
                     [
@@ -241,13 +253,22 @@
                     "Level 2",
                     "2",
                     "Make the road spinning!",
-                    5, 7,
+                    "The factory is introducing a new machine - the spin. it will spin after a bot passing.",
+                    5,
+                    7,
                     [
-                      new gameObjects("spawn", lucide("circle-play"), 2, 0),
-                      new gameObjects("spin", lucide("iteration-ccw"), 2, 3, "down"),
-                      new gameObjects("flag", lucide("goal"), 4, 4),
-                    ]
-                )
+                        new gameObjects("spawn", lucide("circle-play"), 2, 0),
+                        new gameObjects(
+                            "spin",
+                            lucide("iteration-ccw"),
+                            2,
+                            2,
+                            "down",
+                        ),
+                        new gameObjects("flag", lucide("goal"), 4, 4),
+                    ],
+                    2,
+                ),
             ];
 
             // just a backup of currently loading levels, for showing level info
@@ -345,6 +366,7 @@
                     if (levels[i].id !== id) continue;
                     let level = levels[i];
                     loadedLevel = level;
+                    terminalDisplay(level.intro);
                     flag = true;
 
                     // generate the table for game field
@@ -418,25 +440,25 @@
                 cellContent.innerHTML = object.symbol;
 
                 // if its the spin obj then just make the SVG spins into the directions
-                switch (object.type ){
-                  case "spin":
-                switch (object.direction) {
-                        case "top":
-                            cellContent.style.transform = "rotate(270deg)";
-                            break;
-                        case "left":
-                            cellContent.style.transform = "rotate(180deg)";
-                            break;
-                        case "down":
-                            //top, bottom, left spins 90deg
-                            cellContent.style.transform = "rotate(90deg)";
-                        case "right":
+                switch (object.type) {
+                    case "spin":
+                        switch (object.direction) {
+                            case "top":
+                                cellContent.style.transform = "rotate(270deg)";
+                                break;
+                            case "left":
+                                cellContent.style.transform = "rotate(180deg)";
+                                break;
+                            case "down":
+                                //top, bottom, left spins 90deg
+                                cellContent.style.transform = "rotate(90deg)";
+                            case "right":
                             //right is the normal state
                             // so it spins nothing
-                        default:
-                            break;
-                    }
-                    break;
+                            default:
+                                break;
+                        }
+                        break;
                 }
 
                 cell.appendChild(cellContent);
@@ -474,8 +496,10 @@
                 // if there has belt we just moving on the direction
                 // if there has nothing the robot dead and the game is failed(okay u can retry)
                 // if there has flag then game / level is passed
-                // if there has the colorizer then colored the robot and put it towards
-                // if there has a one way color wall we can just pass
+                // if there has a spinner we just pass and let it spin
+
+                // but first we need to have a return value to indicates if its success or nah
+                let runningFlag = false;
 
                 // defines whats a player
                 let player = {
@@ -590,22 +614,24 @@
                                 }
 
                                 // then spin the tile
-                                terminalDisplay("After moving on, the tile spins.")
+                                terminalDisplay(
+                                    "After moving on, the tile spins.",
+                                );
                                 switch (standingObject.direction) {
                                     case "left":
                                         player.x -= 1;
-                                        standingObject.direction = "down"
+                                        standingObject.direction = "down";
                                         break;
                                     case "right":
-                                        standingObject.direction = "up"
+                                        standingObject.direction = "up";
                                         break;
                                     case "up":
                                         player.y -= 1;
-                                        standingObject.direction = "left"
+                                        standingObject.direction = "left";
                                         break;
                                     case "down":
                                         player.y += 1;
-                                        standingObject.direction = "right"
+                                        standingObject.direction = "right";
                                         break;
                                     default:
                                         break;
@@ -617,28 +643,33 @@
                                     .querySelector("#gameTable")
                                     .querySelector(
                                         `tr:nth-child(${standingObject.y + 2}) td:nth-child(${standingObject.x + 2})`,
-                                    ).querySelector("div");
+                                    )
+                                    .querySelector("div");
                                 // and just directly updates
                                 switch (object.direction) {
-                                        case "top":
-                                            spiningCell.style.transform = "rotate(270deg)";
-                                            break;
-                                        case "left":
-                                            spiningCell.style.transform = "rotate(180deg)";
-                                            break;
-                                        case "down":
-                                            //top, bottom, left spins 90deg
-                                            spiningCell.style.transform = "rotate(90deg)";
-                                        case "right":
-                                            //right is the normal state but here we need set to 0deg
-                                            spiningCell.style.transform = "rotate(0deg)";
-                                        default:
-                                            break;
-                                    }
+                                    case "top":
+                                        spiningCell.style.transform =
+                                            "rotate(270deg)";
+                                        break;
+                                    case "left":
+                                        spiningCell.style.transform =
+                                            "rotate(180deg)";
+                                        break;
+                                    case "down":
+                                        //top, bottom, left spins 90deg
+                                        spiningCell.style.transform =
+                                            "rotate(90deg)";
+                                    case "right":
+                                        //right is the normal state but here we need set to 0deg
+                                        spiningCell.style.transform =
+                                            "rotate(0deg)";
+                                    default:
+                                        break;
+                                }
                                 break;
                             case "flag":
                                 // the wining condition is to make the bot touch the flag.
-                                // okay we just do nothing and calc it later
+                                runningFlag = true;
                                 break;
                             default:
                                 break;
@@ -648,13 +679,15 @@
                         playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
                         playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
 
-                        // verify if player is dead or win
+                        // verify if player is win
                         if (standingObject.type === "flag") {
                             // triggers the wining and stop the loop
                             terminalDisplay(
                                 `Congratulations, your robot is successfully reached the flag.`,
                             );
+                            runningFlag = true;
                             clearInterval(mainLoop);
+                            return runningFlag;
                         }
                     } else {
                         // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
@@ -662,6 +695,7 @@
                             `Oops, your robot just fell down. Wanna try it again?`,
                         );
                         clearInterval(mainLoop);
+                        return runningFlag;
                     }
                 }, 1000);
             }
@@ -830,7 +864,23 @@
                         // so we need some way to display on top of the "table" board
                         // idk if its a good idea but we need to put a relative positioned "Robot" (or chess)
                         // to move on the table (or grid), that can be smooth and not replacing the tile/obj
-                        runRobot();
+
+                        // thank god i just extract each run independently and can reuse this
+                        let passingCount = 0;
+                        for (let i = 0; i < loadedLevel.pendingBots; i++) {
+                            if (runRobot()) {
+                                passingCount++;
+                            }
+                        }
+                        if (passingCount === loadedLevel.pendingBots) {
+                            terminalDisplay(
+                                `Congrations, you passed all of the test!`,
+                            );
+                        } else {
+                            terminalDisplay(
+                                `Unluckily, you just passed ${passingCount} of ${loadedLevel.pendingBots} tests.`,
+                            );
+                        }
                         break;
                     case "break":
                         // breaking the obj / del the obj u placed
