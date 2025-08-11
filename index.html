@@ -826,20 +826,21 @@
                     case "place":
                         const placeAction = input.split(" ")[1];
                         switch (placeAction) {
-                            case "belt":
+                          // okay im just tired and want to simplified the process
+                          default:
                                 // looks bad but understandable and can seperates the actually working part
-                                const beltInfo = input.split(" belt ")[1];
+                                const beltInfo = input.split("ace ")[1];
 
                                 // so the command is like
                                 // `place belt (corrds) (facing)`
                                 // so to be place in (2,3) and facing down
                                 // its be like `place belt 2 3 [facing is down by default]
                                 if (
-                                    beltInfo.split(" ").length < 2 ||
+                                    beltInfo.split(" ").length < 3 ||
                                     beltInfo.split(" ").length > 4
                                 ) {
                                     terminalDisplay(
-                                        `Argument is invalid. Usage: place belt x y [facing]\n`,
+                                        `Argument is invalid. Usage: place x y [facing]\n`,
                                     );
                                     break;
                                 }
@@ -849,7 +850,7 @@
                                 // gaves feedback when the input's format is correct but not valid
                                 if (!/^\d+$/g.test(x) || !/^\d+$/g.test(y)) {
                                     terminalDisplay(
-                                        `Coordinates must be numbers. Usage: place belt x y [facing]\n`,
+                                        `Coordinates must be numbers. Usage: place x y [facing]\n`,
                                     );
                                     break;
                                 }
@@ -861,7 +862,7 @@
                                     y < 0 ||
                                     y >= Number(loadedLevel.y)
                                 ) {
-                                    textarea.value += `Coordinates must be inside the level. Usage: place belt x y [facing]\n`;
+                                    textarea.value += `Coordinates must be inside the level. Usage: place x y [facing]\n`;
                                     break;
                                 }
 
