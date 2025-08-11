@@ -19,7 +19,7 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 0.4rem;
+                gap: 8px;
 
                 font-family: "IBM Plex Mono", monospace;
                 font-weight: normal;
@@ -65,10 +65,10 @@
         <style>
             button {
                 border: 0;
-                border-radius: 0.618rem;
-                padding: 0.5rem 1rem 0.45rem;
+                border-radius: 8px;
+                padding: 8px 16px 7px;
 
-                font-size: 1rem;
+                font-size: 16px;
 
                 color: #10fefe;
                 background-color: #064e64;
@@ -80,9 +80,9 @@
 
             textarea {
                 border: 0;
-                padding: 0.5rem 0.45rem;
+                padding: 8px 7px;
 
-                font-size: 1rem;
+                font-size: 16px;
 
                 color: #10fefe;
                 background-color: #102d3b;
@@ -98,7 +98,7 @@
                 border: 0;
                 padding: 0;
 
-                font-size: 1rem;
+                font-size: 16px;
 
                 color: #10fefe;
                 background-color: transparent;
@@ -239,13 +239,13 @@
             var loadedLevel = new level();
         </script>
         <h1 class="bitcount">EchoTerminal - automation factory</h1>
-        <p style="margin-bottom: 2rem">-- inspired by Manufactoria & ShapeZ</p>
+        <p style="margin-bottom: 40px">-- inspired by Manufactoria & ShapeZ</p>
         <div
             id="container"
             style="
                 display: flex;
                 flex-direction: row;
-                gap: 0.6rem;
+                gap: 9px;
                 justify-content: space-between;
                 width: 60vw;
             "
@@ -255,10 +255,10 @@
                 style="
                     display: flex;
                     flex-direction: column;
-                    width: 12rem;
-                    padding: 0.25rem;
+                    width: 184px;
+                    padding: 4px;
                     align-items: end;
-                    gap: 0.25rem;
+                    gap: 4px;
                 "
             ></div>
             <div
@@ -297,7 +297,7 @@
                         type="text"
                         id="terminalInput"
                         class="mono"
-                        style="width: 40rem"
+                        style="width: 640px"
                         placeholder="Enter commands."
                     />
                 </div>
@@ -345,9 +345,9 @@
                         for (let x = -1; x < levels[i].width + 1; x++) {
                             let cell = document.createElement("td");
 
-                            cell.style.border = "0.07rem solid #044771";
-                            cell.style.width = "2rem";
-                            cell.style.height = "2rem";
+                            cell.style.border = "1px solid #044771";
+                            cell.style.width = "32px"
+                            cell.style.height = "32px";
 
                             if (
                                 x === -1 ||
@@ -443,7 +443,7 @@
                 let panel = document.createElement("div");
                 panel.id = "playerPanelPosition";
                 panel.style.position = "relative";
-                panel.style.width = `${(loadedLevel.width + 2) * 2}rem`;
+                panel.style.width = `${(loadedLevel.width + 2) * 2 * 16}px`;
                 panel.style.height = "0px";
                 panel.style.backgroundColor = "red";
                 document.querySelector('#gameStage').appendChild(panel);
@@ -456,10 +456,10 @@
                 playerIcon.style.justifyContent = "center";
                 playerIcon.innerHTML = lucide("bot");
                 playerIcon.style.backgroundColor = `#${player.color}77`
-                playerIcon.style.width = "2rem";
-                playerIcon.style.height = "2rem";
-                playerIcon.style.left = `${((player.x + 1) * 2) + ((spawnpoint.x - player.x) * 0.2)}rem`;
-                playerIcon.style.top = `${((player.y - loadedLevel.height - 1.15) * 2) + ((spawnpoint.y - player.y) * 0.2)}rem`;
+                playerIcon.style.width = "32px";
+                playerIcon.style.height = "32px";
+                playerIcon.style.left = `${((player.x + 1) * 2 * 16)}px`;
+                playerIcon.style.top = `${((player.y - loadedLevel.height - 1.15) * 2 * 16)}px`;
                 panel.appendChild(playerIcon);
 
                 // so here we have the robot display, now is the main loop
@@ -469,8 +469,8 @@
                     player.y += Math.random() > 0.5 ? 1 : -1;
 
                     // update the player icon position
-                    playerIcon.style.left = `${(player.x + 1) * 2}rem`;
-                    playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2}rem`;
+                    playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
+                    playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
                 }, 1000);
 
             }
