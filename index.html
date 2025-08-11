@@ -147,6 +147,10 @@
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-goal-icon lucide-goal"><path d="M12 13V2l8 4-8 4"/><path d="M20.561 10.222a9 9 0 1 1-12.55-5.29"/><path d="M8.002 9.997a5 5 0 1 0 8.9 2.02"/></svg>';
                     case "circle-play":
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-play-icon lucide-circle-play"><path d="M9 9.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997A1 1 0 0 1 9 14.996z"/><circle cx="12" cy="12" r="10"/></svg>';
+                    case "iteration-ccw":
+                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-ccw-icon lucide-iteration-ccw"><path d="m16 14 4 4-4 4"/><path d="M20 10a8 8 0 1 0-8 8h8"/></svg>'
+                    case "iteration-cw":
+                        return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-iteration-cw-icon lucide-iteration-cw"><path d="M4 10a8 8 0 1 1 8 8H4"/><path d="m8 22-4-4 4-4"/></svg>'
                     default:
                         return '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 20l-7-7h14l-7 7z"/></svg>';
                 }
@@ -233,6 +237,17 @@
                         new gameObjects("flag", lucide("goal"), 2, 4),
                     ],
                 ),
+                new level(
+                    "Level 2",
+                    "2",
+                    "Make the road spinning!",
+                    5, 7,
+                    [
+                      new gameObjects("spawn", lucide("circle-play"), 2, 0),
+                      new gameObjects("spin", lucide("iteration-ccw"), 2, 3, "down")
+                      new gameObjects("flag", lucide("goal"), 4, 4),
+                    ]
+                )
             ];
 
             // just a backup of currently loading levels, for showing level info
@@ -419,6 +434,7 @@
             function terminalDisplay(text) {
                 let terminalText = document.querySelector('#terminalDisplay');
                 terminalText.value += text + "\n";
+                terminalText.scrollTop = textarea.scrollHeight;
             }
 
             function runRobot() {
@@ -451,7 +467,7 @@
                 if (document.getElementById("playerPanelPosition")) {
                     document.getElementById("playerPanelPosition").remove();
                 }
-                
+
                 // create the panel with relative pos on the table
                 let panel = document.createElement("div");
                 panel.id = "playerPanelPosition";
@@ -575,6 +591,8 @@
                                     "load <ID> - load the specific level\n";
                                 textarea.value +=
                                     "restart - restart this level\n";
+                                    terminalDisplay(`clear - clear the terminal screen`)
+                                    terminalDisplay(`run - spawn the bot to test if your factory is working`)
                                 break;
                             default:
                                 textarea.value += "Available commands:\n";
@@ -744,6 +762,7 @@
                             "Unknown command. Try to use 'help' to get the command list.\n";
                 }
 
+                // scroll to the bottom for a better visibility after a command is finished.
                 textarea.scrollTop = textarea.scrollHeight;
             }
         </script>
