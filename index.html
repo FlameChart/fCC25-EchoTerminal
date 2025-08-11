@@ -345,7 +345,7 @@
                         for (let x = -1; x < levels[i].width + 1; x++) {
                             let cell = document.createElement("td");
 
-                            cell.style.border = "1px solid #044771";
+                            cell.style.border = "0.07rem solid #044771";
                             cell.style.width = "2rem";
                             cell.style.height = "2rem";
 
@@ -458,11 +458,21 @@
                 playerIcon.style.backgroundColor = `#${player.color}77`
                 playerIcon.style.width = "2rem";
                 playerIcon.style.height = "2rem";
-                playerIcon.style.left = `${(player.x + 1) * 2}rem`;
-                playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2}rem`;
+                playerIcon.style.left = `${((player.x + 1) * 2) + ((spawnpoint.x - player.x) * 0.2)}rem`;
+                playerIcon.style.top = `${((player.y - loadedLevel.height - 1.15) * 2) + ((spawnpoint.y - player.y) * 0.2)}rem`;
                 panel.appendChild(playerIcon);
 
                 // so here we have the robot display, now is the main loop
+                let mainLoop = setInterval(() => {
+                    // update the player position
+                    player.x += Math.random() > 0.5 ? 1 : -1;
+                    player.y += Math.random() > 0.5 ? 1 : -1;
+
+                    // update the player icon position
+                    playerIcon.style.left = `${(player.x + 1) * 2}rem`;
+                    playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2}rem`;
+                }, 1000);
+
             }
 
             // bind the "Submit" to the input
