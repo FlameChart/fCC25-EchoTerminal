@@ -58,7 +58,7 @@ the folowing todo:
 - [x] impl the load levels
 - [x] impl the terminal with basic functionality
 - [x] impl the belt (to move the bot)
-- [ ] impl the delete function (to remove obj u placed)
+- [x] impl the delete function (to remove obj u placed)
 - [ ] impl the run command
 - [ ] impl the game finish (to show that u success/fail)
 - [ ] impl the colorizer

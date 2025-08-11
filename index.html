@@ -410,20 +410,22 @@
                     // (okay u can just reset by refresh the page so idk if this is necessary...)
                     loadedLevel.objects.push(object);
                     isSuccess = true;
+                } else {
+                    removable = false;
                 }
                 return isSuccess;
             }
 
-            function runRobot(){
-              // so first we need to remember what is the moving bot
-              // first we need to lookup the spawn obj to spawn robot on top of it
-              // and then bot moving down by default
-              // then we detect which obj the bot stands on
-              // if there has belt we just moving on the direction
-              // if there has nothing the robot dead and the game is failed(okay u can retry)
-              // if there has flag then game / level is passed
-              // if there has the colorizer then colored the robot and put it towards
-              // if there has a one way color wall we can just pass
+            function runRobot() {
+                // so first we need to remember what is the moving bot
+                // first we need to lookup the spawn obj to spawn robot on top of it
+                // and then bot moving down by default
+                // then we detect which obj the bot stands on
+                // if there has belt we just moving on the direction
+                // if there has nothing the robot dead and the game is failed(okay u can retry)
+                // if there has flag then game / level is passed
+                // if there has the colorizer then colored the robot and put it towards
+                // if there has a one way color wall we can just pass
             }
 
             // bind the "Submit" to the input
@@ -542,9 +544,17 @@
                                         facing,
                                     )
                                 ) {
-                                    var beltObj = new objBelt(x, y, facing);
-                                } else if (facing.length === 0) {
-                                    var beltObj = new objBelt(x, y, "down");
+                                    var beltObj = new objBelt(
+                                        Number(x),
+                                        Number(y),
+                                        facing,
+                                    );
+                                } else if (facing) {
+                                    var beltObj = new objBelt(
+                                        Number(x),
+                                        Number(y),
+                                        "down",
+                                    );
                                 } else {
                                     textarea.value += `Failed to place Belt: Invalid direction.`;
                                     break;
@@ -571,6 +581,49 @@
                         // idk if its a good idea but we need to put a relative positioned "Robot" (or chess)
                         // to move on the table (or grid), that can be smooth and not replacing the tile/obj
                         runRobot();
+                        break;
+                    case "break":
+                        // breaking the obj / del the obj u placed
+                        const x = input.split(" ")[1];
+                        const y = input.split(" ")[2];
+
+                        // check if the coords is Number
+                        if (
+                            Number.isInteger(Number(x)) &&
+                            Number.isInteger(Number(y))
+                        ) {
+                            // lookup in loadedLevel.objects to see if there has any of obj in that pos
+                            let obj = loadedLevel.objects.find((o) => {
+                                return o.x === Number(x) && o.y === Number(y);
+                            });
+
+                            if (obj) {
+                                // break if the obj.removeable == false
+                                if (obj.removable === false) {
+                                    textarea.value += `Object at (${x}, ${y}) cannot be removed\n`;
+                                    break;
+                                }
+                                // del the obj when find
+                                loadedLevel.objects.splice(
+                                    loadedLevel.objects.indexOf(obj),
+                                    1,
+                                );
+                                // look for the cell in the corresponding place and clear the cell
+                                debugger;
+                                let cell = document
+                                    .querySelector("#gameTable")
+                                    .querySelector(
+                                        `tr:nth-child(${Number(y) + 2}) td:nth-child(${Number(x) + 2})`,
+                                    );
+                                cell.innerHTML = " ";
+                                cell.style.backgroundColor = "transparent";
+                                textarea.value += `Object at (${x}, ${y}) removed\n`;
+                            } else {
+                                textarea.value += `No object at (${x}, ${y})\n`;
+                            }
+                        } else {
+                            textarea.value += `Invalid coordinates (${x}, ${y})\n`;
+                        }
                         break;
                     default:
                         textarea.value +=
