@@ -59,10 +59,9 @@ the folowing todo:
 - [x] impl the terminal with basic functionality
 - [x] impl the belt (to move the bot)
 - [x] impl the delete function (to remove obj u placed)
-- [ ] impl the run command
-- [ ] impl the game finish (to show that u success/fail)
-- [ ] impl the colorizer
-- [ ] impl the one way color wall
-- [ ] put the following on the lvl2 fot tutorial
+- [x] impl the run command
+- [x] impl the game finish (to show that u success/fail)
+- [x] impl the spinner
+- [x] put the following on the lvl2 fot tutorial
 - [ ] make a level 3 containing all the things
 - [ ] make the game looks better with canvas
