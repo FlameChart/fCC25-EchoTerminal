@@ -287,11 +287,11 @@
                         "right",
                     ),
                     new gameObjects("trashcan", lucide("trash"), 2, 3),
-                    new gameObjects("trashcan", lucide("trash"), 5, 0),
-                    new gameObjects("trashcan", lucide("trash"), 5, 1),
-                    new gameObjects("trashcan", lucide("trash"), 5, 2),
-                    new gameObjects("trashcan", lucide("trash"), 5, 3),
-                    new gameObjects("flag", lucide("goal"), 6, 2),
+                    new gameObjects("trashcan", lucide("trash"), 3, 1),
+                    new gameObjects("trashcan", lucide("trash"), 6, 1),
+                    new gameObjects("trashcan", lucide("trash"), 6, 2),
+                    new gameObjects("trashcan", lucide("trash"), 6, 3),
+                    new gameObjects("flag", lucide("goal"), 7, 2),
                   ],
                   2
                 )
@@ -695,6 +695,9 @@
                                             break;
                                     }
                                     break;
+                                case "trashcan":
+                                    // trashcan will trash your bot immediately
+                                    break
                                 case "flag":
                                     // the wining condition is to make the bot touch the flag.
                                     runningFlag = true;
@@ -714,6 +717,14 @@
                                     `Congratulations, your robot is successfully reached the flag.`,
                                 );
                                 runningFlag = true;
+                                clearInterval(mainLoop);
+                                resolve(runningFlag);
+                                return;
+                            } else if (standingObject.type === "trashcan") {
+                                // trashcan will trash your bot immediately
+                                terminalDisplay(
+                                    `Oops, your robot just got trashed. Wanna try it again?`,
+                                );
                                 clearInterval(mainLoop);
                                 resolve(runningFlag);
                                 return;
