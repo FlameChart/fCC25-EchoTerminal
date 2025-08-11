@@ -498,6 +498,9 @@
                 // if there has flag then game / level is passed
                 // if there has a spinner we just pass and let it spin
 
+                // okay we need to make this promise to make others can wait this function
+                return new Promise((resolve) => {
+
                 // but first we need to have a return value to indicates if its success or nah
                 let runningFlag = false;
 
@@ -646,7 +649,7 @@
                                     )
                                     .querySelector("div");
                                 // and just directly updates
-                                switch (object.direction) {
+                                switch (spiningCell.direction) {
                                     case "top":
                                         spiningCell.style.transform =
                                             "rotate(270deg)";
@@ -687,7 +690,8 @@
                             );
                             runningFlag = true;
                             clearInterval(mainLoop);
-                            return runningFlag;
+                            resolve(runningFlag)
+                            return;
                         }
                     } else {
                         // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
@@ -695,9 +699,10 @@
                             `Oops, your robot just fell down. Wanna try it again?`,
                         );
                         clearInterval(mainLoop);
-                        return runningFlag;
+                        resolve(runningFlag)
+                        return ;
                     }
-                }, 1000);
+                }, 500);})
             }
 
             // bind the "Submit" to the input
@@ -869,21 +874,25 @@
                         // to move on the table (or grid), that can be smooth and not replacing the tile/obj
 
                         // thank god i just extract each run independently and can reuse this
+                        // lets impl the Promise i just learned (searched and thanks to Claude)
                         let passingCount = 0;
-                        for (let i = 0; i < loadedLevel.pendingBots; i++) {
-                            if (runRobot()) {
+                        (async () => {
+                          for (let i = 0; i < loadedLevel.pendingBots; i++) {
+                            const result = await runRobot();
+                            if (result) {
                                 passingCount++;
-                            }
-                        }
-                        if (passingCount === loadedLevel.pendingBots) {
-                            terminalDisplay(
-                                `Congrations, you passed all of the test!`,
-                            );
-                        } else {
-                            terminalDisplay(
-                                `Unluckily, you just passed ${passingCount} of ${loadedLevel.pendingBots} tests.`,
-                            );
-                        }
+                            } else {break;}
+                          }
+                          if (passingCount === loadedLevel.pendingBots) {
+                              terminalDisplay(
+                                  `Congrations, you passed all of the test!`,
+                              );
+                          } else {
+                              terminalDisplay(
+                                  `Unluckily, you just passed ${passingCount} of ${loadedLevel.pendingBots} tests.`,
+                              );
+                          }
+                        })();
                         break;
                     case "break":
                         // breaking the obj / del the obj u placed
