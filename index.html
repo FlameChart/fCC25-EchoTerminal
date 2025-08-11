@@ -384,6 +384,10 @@
         <!-- the actual logic goes here -->
         <script>
             function startLevel(id) {
+                loadedLevel = null;
+                //before we load the level, lets destory the table if the table exist
+                if(document.querySelector('table#gameTable')) document.querySelector('table#gameTable').remove()
+
                 // flags about is the level loaded or nah
                 let flag = false;
                 // first we need to have a way to recognize the level's size & basic info
@@ -391,7 +395,8 @@
                     // skip the other levels
                     if (levels[i].id !== id) continue;
                     let level = levels[i];
-                    loadedLevel = level;
+                    loadedLevel =
+                      JSON.parse(JSON.stringify(level));
                     terminalDisplay(level.intro);
                     flag = true;
 
