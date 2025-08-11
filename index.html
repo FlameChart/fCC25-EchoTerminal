@@ -416,6 +416,11 @@
                 return isSuccess;
             }
 
+            function terminalDisplay(text) {
+                let terminalText = document.querySelector('#terminalDisplay');
+                terminalText.value += text + "\n";
+            }
+
             function runRobot() {
                 // so first we need to remember what is the moving bot
                 // first we need to lookup the spawn obj to spawn robot on top of it
@@ -442,6 +447,11 @@
                 player.x = spawnpoint.x;
                 player.y = spawnpoint.y;
 
+                // if the panel is exist, then break the panel to avoid the "repeat summon of robot"
+                if (document.getElementById("playerPanelPosition")) {
+                    document.getElementById("playerPanelPosition").remove();
+                }
+                
                 // create the panel with relative pos on the table
                 let panel = document.createElement("div");
                 panel.id = "playerPanelPosition";
@@ -458,7 +468,7 @@
                 playerIcon.style.alignItems = "center";
                 playerIcon.style.justifyContent = "center";
                 playerIcon.innerHTML = lucide("bot");
-                playerIcon.style.backgroundColor = `#${player.color}77`;
+                playerIcon.style.backgroundColor = `#${player.color}aa`;
                 playerIcon.style.width = "32px";
                 playerIcon.style.height = "32px";
                 playerIcon.style.left = `${(player.x + 1) * 2 * 16}px`;
@@ -481,21 +491,26 @@
                         switch (standingObject.type) {
                             case "spawn":
                                 // we will moving down by default
+                                terminalDisplay(`Spawn robot in (${player.x}, ${player.y})`)
                                 player.y += 1;
                                 break;
                             case "belt":
                                 // the moving is depending on the belt's directions
                                 switch (standingObject.direction) {
                                     case "left":
+                                        terminalDisplay(`Moving left`)
                                         player.x -= 1;
                                         break;
                                     case "right":
+                                        terminalDisplay(`Moving right`)
                                         player.x += 1;
                                         break;
                                     case "up":
+                                        terminalDisplay(`Moving up`)
                                         player.y -= 1;
                                         break;
                                     case "down":
+                                        terminalDisplay(`Moving down`)
                                         player.y += 1;
                                         break;
                                     default:
@@ -504,15 +519,26 @@
                                 break;
                             case "flag":
                                 // the wining condition is to make the bot touch the flag.
+                                // okay we just do nothing and calc it later
                                 break;
                             default:
                                 break;
                         }
+
                         // update the player icon position
                         playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
                         playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
+
+                        // verify if player is dead or win
+                        if(standingObject.type === "flag"){
+                          // triggers the wining and stop the loop
+                          terminalDisplay(`Congratulations, your robot is successfully reached the flag.`)
+                          clearInterval(mainLoop);
+                        }
                     } else {
                         // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
+                        terminalDisplay(`Oops, your robot just fell down. Wanna try it again?`)
+                        clearInterval(mainLoop);
                     }
                 }, 1000);
             }
@@ -531,7 +557,7 @@
                 // let terminal can be access
                 var textarea = document.querySelector("#terminalDisplay");
 
-                textarea.value += "\n\n> " + input + "\n";
+                terminalDisplay(`\n\n> ${input}`)
 
                 const baseCommand = input.split(" ")[0];
                 switch (baseCommand) {
@@ -604,7 +630,7 @@
                                     beltInfo.split(" ").length < 2 ||
                                     beltInfo.split(" ").length > 4
                                 ) {
-                                    textarea.value += `Argument is invalid. Usage: place belt x y [facing]\n`;
+                                    terminalDisplay( `Argument is invalid. Usage: place belt x y [facing]\n`)
                                     break;
                                 }
 
@@ -612,7 +638,7 @@
 
                                 // gaves feedback when the input's format is correct but not valid
                                 if (!/^\d+$/g.test(x) || !/^\d+$/g.test(y)) {
-                                    textarea.value += `Coordinates must be numbers. Usage: place belt x y [facing]\n`;
+                                    terminalDisplay( `Coordinates must be numbers. Usage: place belt x y [facing]\n`)
                                     break;
                                 }
 
@@ -645,7 +671,7 @@
                                         "down",
                                     );
                                 } else {
-                                    textarea.value += `Failed to place Belt: Invalid direction.`;
+                                    terminalDisplay( `Failed to place Belt: Invalid direction.`)
                                     break;
                                 }
 
