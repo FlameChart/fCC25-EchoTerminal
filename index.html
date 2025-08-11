@@ -732,12 +732,6 @@
                                     "load <ID> - load the specific level\n";
                                 textarea.value +=
                                     "restart - restart this level\n";
-                                terminalDisplay(
-                                    `clear - clear the terminal screen`,
-                                );
-                                terminalDisplay(
-                                    `run - spawn the bot to test if your factory is working`,
-                                );
                                 break;
                             default:
                                 textarea.value += "Available commands:\n";
@@ -747,6 +741,15 @@
                                     "help - display this message\n";
                                 textarea.value +=
                                     "level - switch and restart the level\n";
+                                terminalDisplay(
+                                    `place - place the machine (we only have belt now)`,
+                                );
+                                terminalDisplay(
+                                    `run - spawn the bot to test if your factory is working`,
+                                );
+                                terminalDisplay(
+                                  `break - break the machine when you no longer need it`
+                                )
                         }
                         break;
                     case "level":
