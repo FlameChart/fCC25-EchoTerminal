@@ -500,209 +500,209 @@
 
                 // okay we need to make this promise to make others can wait this function
                 return new Promise((resolve) => {
+                    // but first we need to have a return value to indicates if its success or nah
+                    let runningFlag = false;
 
-                // but first we need to have a return value to indicates if its success or nah
-                let runningFlag = false;
+                    // defines whats a player
+                    let player = {
+                        color: "FFFFFF",
+                        x: -1,
+                        y: -1,
+                    };
 
-                // defines whats a player
-                let player = {
-                    color: "FFFFFF",
-                    x: -1,
-                    y: -1,
-                };
-
-                // init the player by read the spawn obj and move the player onnit
-                const objectLists = loadedLevel.objects;
-                const spawnpoint = objectLists.find((obj) => {
-                    return obj.type === "spawn";
-                });
-                player.x = spawnpoint.x;
-                player.y = spawnpoint.y;
-
-                // if the panel is exist, then break the panel to avoid the "repeat summon of robot"
-                if (document.getElementById("playerPanelPosition")) {
-                    document.getElementById("playerPanelPosition").remove();
-                }
-
-                // create the panel with relative pos on the table
-                let panel = document.createElement("div");
-                panel.id = "playerPanelPosition";
-                panel.style.position = "relative";
-                panel.style.width = `${(loadedLevel.width + 2) * 2 * 16}px`;
-                panel.style.height = "0px";
-                panel.style.backgroundColor = "red";
-                document.querySelector("#gameStage").appendChild(panel);
-
-                // and draw the robot onnit
-                let playerIcon = document.createElement("div");
-                playerIcon.style.position = "relative";
-                playerIcon.style.display = "flex";
-                playerIcon.style.alignItems = "center";
-                playerIcon.style.justifyContent = "center";
-                playerIcon.innerHTML = lucide("bot");
-                playerIcon.style.backgroundColor = `#${player.color}aa`;
-                playerIcon.style.width = "32px";
-                playerIcon.style.height = "32px";
-                playerIcon.style.left = `${(player.x + 1) * 2 * 16}px`;
-                playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16}px`;
-                panel.appendChild(playerIcon);
-
-                // so here we have the robot display, now is the main loop
-                let mainLoop = setInterval(() => {
-                    // randomly update the player position
-                    // player.x += Math.random() > 0.5 ? 1 : -1;
-                    // player.y += Math.random() > 0.5 ? 1 : -1;
-
-                    // so first we need to know which tile im standing on
-                    var standingObject = objectLists.find((obj) => {
-                        return obj.x === player.x && obj.y === player.y;
+                    // init the player by read the spawn obj and move the player onnit
+                    const objectLists = loadedLevel.objects;
+                    const spawnpoint = objectLists.find((obj) => {
+                        return obj.type === "spawn";
                     });
-                    if (standingObject) {
-                        // there has the object underneath the bot
-                        // so lets moving / happening something
-                        switch (standingObject.type) {
-                            case "spawn":
-                                // we will moving down by default
+                    player.x = spawnpoint.x;
+                    player.y = spawnpoint.y;
+
+                    // if the panel is exist, then break the panel to avoid the "repeat summon of robot"
+                    if (document.getElementById("playerPanelPosition")) {
+                        document.getElementById("playerPanelPosition").remove();
+                    }
+
+                    // create the panel with relative pos on the table
+                    let panel = document.createElement("div");
+                    panel.id = "playerPanelPosition";
+                    panel.style.position = "relative";
+                    panel.style.width = `${(loadedLevel.width + 2) * 2 * 16}px`;
+                    panel.style.height = "0px";
+                    panel.style.backgroundColor = "red";
+                    document.querySelector("#gameStage").appendChild(panel);
+
+                    // and draw the robot onnit
+                    let playerIcon = document.createElement("div");
+                    playerIcon.style.position = "relative";
+                    playerIcon.style.display = "flex";
+                    playerIcon.style.alignItems = "center";
+                    playerIcon.style.justifyContent = "center";
+                    playerIcon.innerHTML = lucide("bot");
+                    playerIcon.style.backgroundColor = `#${player.color}aa`;
+                    playerIcon.style.width = "32px";
+                    playerIcon.style.height = "32px";
+                    playerIcon.style.left = `${(player.x + 1) * 2 * 16}px`;
+                    playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16}px`;
+                    panel.appendChild(playerIcon);
+
+                    // so here we have the robot display, now is the main loop
+                    let mainLoop = setInterval(() => {
+                        // randomly update the player position
+                        // player.x += Math.random() > 0.5 ? 1 : -1;
+                        // player.y += Math.random() > 0.5 ? 1 : -1;
+
+                        // so first we need to know which tile im standing on
+                        var standingObject = objectLists.find((obj) => {
+                            return obj.x === player.x && obj.y === player.y;
+                        });
+                        if (standingObject) {
+                            // there has the object underneath the bot
+                            // so lets moving / happening something
+                            switch (standingObject.type) {
+                                case "spawn":
+                                    // we will moving down by default
+                                    terminalDisplay(
+                                        `Spawn robot in (${player.x}, ${player.y})`,
+                                    );
+                                    player.y += 1;
+                                    break;
+                                case "belt":
+                                    // the moving is depending on the belt's directions
+                                    switch (standingObject.direction) {
+                                        case "left":
+                                            terminalDisplay(`Moving left`);
+                                            player.x -= 1;
+                                            break;
+                                        case "right":
+                                            terminalDisplay(`Moving right`);
+                                            player.x += 1;
+                                            break;
+                                        case "up":
+                                            terminalDisplay(`Moving up`);
+                                            player.y -= 1;
+                                            break;
+                                        case "down":
+                                            terminalDisplay(`Moving down`);
+                                            player.y += 1;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                case "spin":
+                                    // okay so we need to move the player into the right direction, and then spin the tile's directions
+
+                                    // starting with the normal moving
+                                    switch (standingObject.direction) {
+                                        case "left":
+                                            terminalDisplay(`Moving left`);
+                                            player.x -= 1;
+                                            break;
+                                        case "right":
+                                            terminalDisplay(`Moving right`);
+                                            player.x += 1;
+                                            break;
+                                        case "up":
+                                            terminalDisplay(`Moving up`);
+                                            player.y -= 1;
+                                            break;
+                                        case "down":
+                                            terminalDisplay(`Moving down`);
+                                            player.y += 1;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    // then spin the tile
+                                    terminalDisplay(
+                                        "After moving on, the tile spins.",
+                                    );
+                                    switch (standingObject.direction) {
+                                        case "left":
+                                            player.x -= 1;
+                                            standingObject.direction = "down";
+                                            break;
+                                        case "right":
+                                            standingObject.direction = "up";
+                                            break;
+                                        case "up":
+                                            player.y -= 1;
+                                            standingObject.direction = "left";
+                                            break;
+                                        case "down":
+                                            player.y += 1;
+                                            standingObject.direction = "right";
+                                            break;
+                                        default:
+                                            break;
+                                    }
+
+                                    // then updates the table showing up the newest directions
+                                    // look for the cell in the corresponding place and clear the cell
+                                    let spiningCell = document
+                                        .querySelector("#gameTable")
+                                        .querySelector(
+                                            `tr:nth-child(${standingObject.y + 2}) td:nth-child(${standingObject.x + 2})`,
+                                        )
+                                        .querySelector("div");
+                                    // and just directly updates
+                                    switch (spiningCell.direction) {
+                                        case "top":
+                                            spiningCell.style.transform =
+                                                "rotate(270deg)";
+                                            break;
+                                        case "left":
+                                            spiningCell.style.transform =
+                                                "rotate(180deg)";
+                                            break;
+                                        case "down":
+                                            //top, bottom, left spins 90deg
+                                            spiningCell.style.transform =
+                                                "rotate(90deg)";
+                                        case "right":
+                                            //right is the normal state but here we need set to 0deg
+                                            spiningCell.style.transform =
+                                                "rotate(0deg)";
+                                        default:
+                                            break;
+                                    }
+                                    break;
+                                case "flag":
+                                    // the wining condition is to make the bot touch the flag.
+                                    runningFlag = true;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            // update the player icon position
+                            playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
+                            playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
+
+                            // verify if player is win
+                            if (standingObject.type === "flag") {
+                                // triggers the wining and stop the loop
                                 terminalDisplay(
-                                    `Spawn robot in (${player.x}, ${player.y})`,
+                                    `Congratulations, your robot is successfully reached the flag.`,
                                 );
-                                player.y += 1;
-                                break;
-                            case "belt":
-                                // the moving is depending on the belt's directions
-                                switch (standingObject.direction) {
-                                    case "left":
-                                        terminalDisplay(`Moving left`);
-                                        player.x -= 1;
-                                        break;
-                                    case "right":
-                                        terminalDisplay(`Moving right`);
-                                        player.x += 1;
-                                        break;
-                                    case "up":
-                                        terminalDisplay(`Moving up`);
-                                        player.y -= 1;
-                                        break;
-                                    case "down":
-                                        terminalDisplay(`Moving down`);
-                                        player.y += 1;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                                break;
-                            case "spin":
-                                // okay so we need to move the player into the right direction, and then spin the tile's directions
-
-                                // starting with the normal moving
-                                switch (standingObject.direction) {
-                                    case "left":
-                                        terminalDisplay(`Moving left`);
-                                        player.x -= 1;
-                                        break;
-                                    case "right":
-                                        terminalDisplay(`Moving right`);
-                                        player.x += 1;
-                                        break;
-                                    case "up":
-                                        terminalDisplay(`Moving up`);
-                                        player.y -= 1;
-                                        break;
-                                    case "down":
-                                        terminalDisplay(`Moving down`);
-                                        player.y += 1;
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                                // then spin the tile
-                                terminalDisplay(
-                                    "After moving on, the tile spins.",
-                                );
-                                switch (standingObject.direction) {
-                                    case "left":
-                                        player.x -= 1;
-                                        standingObject.direction = "down";
-                                        break;
-                                    case "right":
-                                        standingObject.direction = "up";
-                                        break;
-                                    case "up":
-                                        player.y -= 1;
-                                        standingObject.direction = "left";
-                                        break;
-                                    case "down":
-                                        player.y += 1;
-                                        standingObject.direction = "right";
-                                        break;
-                                    default:
-                                        break;
-                                }
-
-                                // then updates the table showing up the newest directions
-                                // look for the cell in the corresponding place and clear the cell
-                                let spiningCell = document
-                                    .querySelector("#gameTable")
-                                    .querySelector(
-                                        `tr:nth-child(${standingObject.y + 2}) td:nth-child(${standingObject.x + 2})`,
-                                    )
-                                    .querySelector("div");
-                                // and just directly updates
-                                switch (spiningCell.direction) {
-                                    case "top":
-                                        spiningCell.style.transform =
-                                            "rotate(270deg)";
-                                        break;
-                                    case "left":
-                                        spiningCell.style.transform =
-                                            "rotate(180deg)";
-                                        break;
-                                    case "down":
-                                        //top, bottom, left spins 90deg
-                                        spiningCell.style.transform =
-                                            "rotate(90deg)";
-                                    case "right":
-                                        //right is the normal state but here we need set to 0deg
-                                        spiningCell.style.transform =
-                                            "rotate(0deg)";
-                                    default:
-                                        break;
-                                }
-                                break;
-                            case "flag":
-                                // the wining condition is to make the bot touch the flag.
                                 runningFlag = true;
-                                break;
-                            default:
-                                break;
-                        }
-
-                        // update the player icon position
-                        playerIcon.style.left = `${(player.x + 1) * 2 * 16 - (spawnpoint.x - player.x) * 1}px`;
-                        playerIcon.style.top = `${(player.y - loadedLevel.height - 1.15) * 2 * 16 - (spawnpoint.y - player.y) * 1}px`;
-
-                        // verify if player is win
-                        if (standingObject.type === "flag") {
-                            // triggers the wining and stop the loop
+                                clearInterval(mainLoop);
+                                resolve(runningFlag);
+                                return;
+                            }
+                        } else {
+                            // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
                             terminalDisplay(
-                                `Congratulations, your robot is successfully reached the flag.`,
+                                `Oops, your robot just fell down. Wanna try it again?`,
                             );
-                            runningFlag = true;
                             clearInterval(mainLoop);
-                            resolve(runningFlag)
+                            resolve(runningFlag);
                             return;
                         }
-                    } else {
-                        // okay we can not find the object, so that means the bot is falling on the ground, which results a fail
-                        terminalDisplay(
-                            `Oops, your robot just fell down. Wanna try it again?`,
-                        );
-                        clearInterval(mainLoop);
-                        resolve(runningFlag)
-                        return ;
-                    }
-                }, 500);})
+                    }, 500);
+                });
             }
 
             // bind the "Submit" to the input
@@ -753,8 +753,8 @@
                                     `run - spawn the bot to test if your factory is working`,
                                 );
                                 terminalDisplay(
-                                  `break - break the machine when you no longer need it`
-                                )
+                                    `break - break the machine when you no longer need it`,
+                                );
                         }
                         break;
                     case "level":
@@ -877,21 +877,23 @@
                         // lets impl the Promise i just learned (searched and thanks to Claude)
                         let passingCount = 0;
                         (async () => {
-                          for (let i = 0; i < loadedLevel.pendingBots; i++) {
-                            const result = await runRobot();
-                            if (result) {
-                                passingCount++;
-                            } else {break;}
-                          }
-                          if (passingCount === loadedLevel.pendingBots) {
-                              terminalDisplay(
-                                  `Congrations, you passed all of the test!`,
-                              );
-                          } else {
-                              terminalDisplay(
-                                  `Unluckily, you just passed ${passingCount} of ${loadedLevel.pendingBots} tests.`,
-                              );
-                          }
+                            for (let i = 0; i < loadedLevel.pendingBots; i++) {
+                                const result = await runRobot();
+                                if (result) {
+                                    passingCount++;
+                                } else {
+                                    break;
+                                }
+                            }
+                            if (passingCount === loadedLevel.pendingBots) {
+                                terminalDisplay(
+                                    `Congrations, you passed all of the test!`,
+                                );
+                            } else {
+                                terminalDisplay(
+                                    `Unluckily, you just passed ${passingCount} of ${loadedLevel.pendingBots} tests.`,
+                                );
+                            }
                         })();
                         break;
                     case "break":
