@@ -1,5 +1,7 @@
 # fCC Gamejam 2025 August Project - Echo Terminal
 
+> This session of the gamejam are finished at `Aug 12nd, 2025 3:05AM(UTF+8)`, now that will goes to an archive. See you in the next session.
+
 ## Prompt
 
 ### 🕹️ The “Legacy Code” Jam
@@ -53,7 +55,7 @@ so lets put this thing to the _last_, we must focus on the actual gameplay and l
 
 the folowing todo:
 
-> updated on the Day 2/3
+> updated on the Day 4/3
 
 - [x] impl the load levels
 - [x] impl the terminal with basic functionality
@@ -63,5 +65,5 @@ the folowing todo:
 - [x] impl the game finish (to show that u success/fail)
 - [x] impl the spinner
 - [x] put the following on the lvl2 fot tutorial
-- [ ] make a level 3 containing all the things
+- [x] make a level 3 containing all the things
 - [ ] make the game looks better with canvas
